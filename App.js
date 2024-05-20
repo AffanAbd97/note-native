@@ -1,20 +1,70 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import React, { useState } from "react";
+import { StyleSheet, View } from "react-native";
+import CustomButton from "./components/Button";
+import Input from "./components/Input";
+import Home from "./screens/Home";
+import Add from "./screens/Add";
+import Edit from "./screens/Edit";
 
-export default function App() {
+const INITIAL_NOTES = [
+  {
+    id: 1,
+    title: "Note pertama",
+    desc: "Lorem Ipsum is simply dummy text of the printing and typesetting industry",
+  },
+];
+
+const HandleChangePage = ({
+  page,
+  setPage,
+  noteList,
+  addNotes,
+  deleteNotes,
+}) => {
+  switch (page) {
+    case "home":
+      return (
+        <Home noteList={noteList} setPage={setPage} deleteNotes={deleteNotes} />
+      );
+    case "edit":
+      return <Edit />;
+    case "add":
+      return <Add setPage={setPage} addNotes={addNotes} />;
+
+    default:
+      break;
+  }
+};
+
+function App() {
+  const [page, setPage] = useState("home");
+  let initialData = [...INITIAL_NOTES];
+  const [noteList, setnoteList] = useState(initialData);
+  const handleAddNotes = (title, desc) => {
+    const id = noteList.length > 0 ? noteList[noteList.length - 1].id + 1 : 1;
+    setnoteList([
+      ...noteList,
+      {
+        id: id,
+        title: title,
+        desc: desc,
+      },
+    ]);
+  };
+
+  const handleDelete = (id) => {
+    const newList = noteList.filter((item) => item.id !== id);
+    setnoteList(newList);
+  };
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <HandleChangePage
+      noteList={noteList}
+      page={page}
+      setPage={setPage}
+      addNotes={handleAddNotes}
+      deleteNotes={handleDelete}
+    />
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+export default App;
