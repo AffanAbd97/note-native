@@ -5,6 +5,8 @@ import Input from "./components/Input";
 import Home from "./screens/Home";
 import Add from "./screens/Add";
 import Edit from "./screens/Edit";
+import AppContext from "./Context/AppContext";
+import Screen from "./Routes/Screen";
 
 const INITIAL_NOTES = [
   {
@@ -13,36 +15,6 @@ const INITIAL_NOTES = [
     desc: "Lorem Ipsum is simply dummy text of the printing and typesetting industry",
   },
 ];
-
-const HandleChangePage = ({
-  page,
-  setPage,
-  noteList,
-  addNotes,
-  deleteNotes,
-  editItem,
-  editData,
-  saveUpdate
-}) => {
-  switch (page) {
-    case "home":
-      return (
-        <Home
-          noteList={noteList}
-          setPage={setPage}
-          deleteNotes={deleteNotes}
-          editItem={editItem}
-        />
-      );
-    case "edit":
-      return <Edit initialData={editData} setPage={setPage} saveUpdate={saveUpdate}/>;
-    case "add":
-      return <Add setPage={setPage} addNotes={addNotes} />;
-
-    default:
-      break;
-  }
-};
 
 function App() {
   const [page, setPage] = useState("home");
@@ -62,6 +34,7 @@ function App() {
     if (data) {
       data.title = title;
       data.desc = desc;
+      setEditData(null);
     }
   };
 
@@ -82,16 +55,20 @@ function App() {
     setnoteList(newList);
   };
   return (
-    <HandleChangePage
-      noteList={noteList}
-      page={page}
-      setPage={setPage}
-      addNotes={handleAddNotes}
-      deleteNotes={handleDelete}
-      editItem={handleEdit}
-      editData={editData}
-      saveUpdate={handleSaveEdit}
-    />
+    <AppContext.Provider
+      value={{
+        page,
+        setPage,
+        editData,
+        noteList,
+        handleSaveEdit,
+        handleEdit,
+        handleAddNotes,
+        handleDelete,
+      }}
+    >
+      <Screen />
+    </AppContext.Provider>
   );
 }
 

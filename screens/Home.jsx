@@ -1,14 +1,14 @@
-import React from "react";
+import React, { useContext } from "react";
 
 import { FlatList, StyleSheet, View, Text } from "react-native";
 import CustomButton from "../components/Button";
-const NoteCard = ({ item, setPage, deleteNotes, editItem }) => {
+import AppContext from "../Context/AppContext";
+const NoteCard = ({ item, deleteNotes, editItem }) => {
   const handleDelete = () => {
     deleteNotes(item.id);
   };
   const handleEdit = () => {
     editItem(item.id);
-    // setPage("edit");
   };
   return (
     <View style={styles.card}>
@@ -36,30 +36,33 @@ const NoteCard = ({ item, setPage, deleteNotes, editItem }) => {
   );
 };
 
-const Home = ({ noteList, setPage, deleteNotes, editItem }) => (
-  <View style={styles.container}>
-    <CustomButton
-      backgroundColor="#DDD"
-      color="#203239"
-      text="Tambahkan Note"
-      width="100%"
-      onPress={() => setPage("add")}
-    />
-    <FlatList
-      showsVerticalScrollIndicator={false}
-      data={noteList}
-      renderItem={({ item }) => (
-        <NoteCard
-          item={item}
-          setPage={setPage}
-          deleteNotes={deleteNotes}
-          editItem={editItem}
-        />
-      )}
-      keyExtractor={(item) => item.id}
-    />
-  </View>
-);
+const Home = () => {
+  const { noteList, setPage, handleDelete, handleEdit } =
+    useContext(AppContext);
+  return (
+    <View style={styles.container}>
+      <CustomButton
+        backgroundColor="#DDD"
+        color="#203239"
+        text="Tambahkan Note"
+        width="100%"
+        onPress={() => setPage("add")}
+      />
+      <FlatList
+        showsVerticalScrollIndicator={false}
+        data={noteList}
+        renderItem={({ item }) => (
+          <NoteCard
+            item={item}
+            deleteNotes={handleDelete}
+            editItem={handleEdit}
+          />
+        )}
+        keyExtractor={(item) => item.id}
+      />
+    </View>
+  );
+};
 
 const styles = StyleSheet.create({
   container: {

@@ -1,14 +1,16 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import Input from "../components/Input";
 import CustomButton from "../components/Button";
+import AppContext from "../Context/AppContext";
 
-function Add({ setPage, addNotes }) {
+function Add() {
+  const { setPage, handleAddNotes } = useContext(AppContext);
   const [title, setTitle] = useState("");
   const [desc, setDesc] = useState("");
 
   const handleSubmit = () => {
-    addNotes(title, desc);
+    handleAddNotes(title, desc);
     setPage("home");
   };
 

@@ -1,9 +1,15 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import Input from "../components/Input";
 import CustomButton from "../components/Button";
+import AppContext from "../Context/AppContext";
 
-function Edit({ setPage, initialData, saveUpdate }) {
+function Edit() {
+  const {
+    setPage,
+    editData: initialData,
+    handleSaveEdit: saveUpdate,
+  } = useContext(AppContext);
   const [title, setTitle] = useState(initialData.title);
   const [desc, setDesc] = useState(initialData.desc);
 
