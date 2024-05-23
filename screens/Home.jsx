@@ -1,8 +1,17 @@
 import React, { useContext } from "react";
 
-import { FlatList, StyleSheet, View, Text } from "react-native";
+import {
+  FlatList,
+  StyleSheet,
+  View,
+  Text,
+  TouchableOpacity,
+} from "react-native";
 import CustomButton from "../components/Button";
 import AppContext from "../Context/AppContext";
+import AddButton from "../components/AddButton";
+import TrashButton from "../components/TrashButton";
+import Navbar from "../components/Navbar";
 const NoteCard = ({ item, deleteNotes, editItem }) => {
   const handleDelete = () => {
     deleteNotes(item.id);
@@ -11,28 +20,13 @@ const NoteCard = ({ item, deleteNotes, editItem }) => {
     editItem(item.id);
   };
   return (
-    <View style={styles.card}>
-      <Text style={styles.cardTitle}>{item.title}</Text>
-      <Text>{item.desc}</Text>
-      <View style={styles.buttons}>
-        <CustomButton
-          bgColor="#FFC300"
-          color="#151D3B"
-          text="Ubah"
-          fontSize={12}
-          width={100}
-          onPress={handleEdit}
-        />
-        <CustomButton
-          bgColor="#D82148"
-          color="#fff"
-          text="Hapus"
-          fontSize={12}
-          width={100}
-          onPress={handleDelete}
-        />
+    <TouchableOpacity style={styles.card} onPress={handleEdit}>
+      <View style={styles.cardTop}>
+        <Text style={styles.cardTitle}>{item.title}</Text>
+        <TrashButton onPress={handleDelete} />
       </View>
-    </View>
+      <Text>{item.desc}</Text>
+    </TouchableOpacity>
   );
 };
 
@@ -41,14 +35,9 @@ const Home = () => {
     useContext(AppContext);
   return (
     <View style={styles.container}>
-      <CustomButton
-        backgroundColor="#DDD"
-        color="#203239"
-        text="Tambahkan Note"
-        width="100%"
-        onPress={() => setPage("add")}
-      />
+      <Navbar />
       <FlatList
+        style={styles.itemList}
         showsVerticalScrollIndicator={false}
         data={noteList}
         renderItem={({ item }) => (
@@ -60,23 +49,35 @@ const Home = () => {
         )}
         keyExtractor={(item) => item.id}
       />
+      <AddButton onAddPress={() => setPage("add")} />
     </View>
   );
 };
 
 const styles = StyleSheet.create({
+  itemList: { paddingHorizontal: 20 },
   container: {
     display: "flex",
+    flex: 1,
     flexDirection: "column",
     justifyContent: "center",
-    padding: 20,
+
+    paddingTop: 32,
+    position: "relative",
   },
   card: {
     padding: 10,
     marginVertical: 15,
     borderColor: "#DDD",
-    borderWidth: 2,
+    borderWidth: 1,
     borderRadius: 5,
+  },
+  cardTop: {
+    width: "100%",
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
   },
   cardTitle: {
     fontWeight: "600",

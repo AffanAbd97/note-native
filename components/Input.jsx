@@ -9,7 +9,9 @@ function Input({ text, onChange, label, multiline, numberOfLines }) {
     input: {
       borderWidth: 2,
       borderColor: "#DDD",
+      borderRadius:15,
       padding: 10,
+      marginTop:6
     },
   });
   return (

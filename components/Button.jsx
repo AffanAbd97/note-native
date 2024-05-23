@@ -14,6 +14,7 @@ function CustomButton({
       backgroundColor: bgColor,
       width,
       padding: 10,
+      borderRadius:15
     },
     buttonText: {
       fontSize,
