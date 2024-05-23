@@ -20,14 +20,22 @@ const HandleChangePage = ({
   noteList,
   addNotes,
   deleteNotes,
+  editItem,
+  editData,
+  saveUpdate
 }) => {
   switch (page) {
     case "home":
       return (
-        <Home noteList={noteList} setPage={setPage} deleteNotes={deleteNotes} />
+        <Home
+          noteList={noteList}
+          setPage={setPage}
+          deleteNotes={deleteNotes}
+          editItem={editItem}
+        />
       );
     case "edit":
-      return <Edit />;
+      return <Edit initialData={editData} setPage={setPage} saveUpdate={saveUpdate}/>;
     case "add":
       return <Add setPage={setPage} addNotes={addNotes} />;
 
@@ -38,8 +46,25 @@ const HandleChangePage = ({
 
 function App() {
   const [page, setPage] = useState("home");
+  const [editData, setEditData] = useState(null);
   let initialData = [...INITIAL_NOTES];
   const [noteList, setnoteList] = useState(initialData);
+
+  const handleEdit = (id) => {
+    const data = noteList.find((item) => item.id == id);
+    if (data) {
+      setEditData(data);
+      setPage("edit");
+    }
+  };
+  const handleSaveEdit = (id, title, desc) => {
+    const data = noteList.find((item) => item.id == id);
+    if (data) {
+      data.title = title;
+      data.desc = desc;
+    }
+  };
+
   const handleAddNotes = (title, desc) => {
     const id = noteList.length > 0 ? noteList[noteList.length - 1].id + 1 : 1;
     setnoteList([
@@ -63,6 +88,9 @@ function App() {
       setPage={setPage}
       addNotes={handleAddNotes}
       deleteNotes={handleDelete}
+      editItem={handleEdit}
+      editData={editData}
+      saveUpdate={handleSaveEdit}
     />
   );
 }
